@@ -3,6 +3,7 @@ import { Actor, Engine, Vector, DisplayMode } from "excalibur"
 import { Resources, ResourceLoader } from './resources.js'
 import { Background } from './background/background.js'    
 import { Player } from './player/player.js'
+import { Enemy } from './enemy/enemy.js'
 
 export class Game extends Engine {
 
@@ -24,6 +25,9 @@ export class Game extends Engine {
 
          const player = new Player()
          this.add(player)
+
+         const enemy = new Enemy()
+         this.add(enemy)
 
     }
 
