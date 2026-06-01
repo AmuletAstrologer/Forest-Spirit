@@ -1,4 +1,4 @@
-import { Actor, Vector, SpriteSheet, Animation, Keys } from "excalibur"
+import { Actor, Vector, SpriteSheet, Animation, Keys, CollisionType, DegreeOfFreedom } from "excalibur"
 import { Resources } from '../resources.js'
 import { Enemy } from "../enemy/enemy.js"
 
@@ -7,13 +7,14 @@ export class Player extends Actor {
     constructor() {
         super({
             width: 67,
-            height: 90
+            height: 90,
+            collisionType: CollisionType.Active
         })
     }
 
     onInitialize(engine) {
 
-        // sprite
+        // Idle sheet
         const idleSheet = SpriteSheet.fromImageSource({
             image: Resources.PlayerIdle,
             grid: {
@@ -24,6 +25,7 @@ export class Player extends Actor {
             }
         })
 
+        // Run sheet
         const runSheet = SpriteSheet.fromImageSource({
             image: Resources.PlayerRun,
             grid: {
@@ -34,13 +36,34 @@ export class Player extends Actor {
             }
         })
 
+        // Jump sheet
+        const jumpSheet = SpriteSheet.fromImageSource({
+            image: Resources.PlayerJump,
+            grid: {
+                rows: 1,
+                columns: 2,
+                spriteWidth: 231,
+                spriteHeight: 190
+            }
+        })
 
+        //Fall sheet
+        const fallSheet = SpriteSheet.fromImageSource({
+            image: Resources.PlayerFall,
+            grid: {
+                rows: 1,
+                columns: 2,
+                spriteWidth: 231,
+                spriteHeight: 190
+            }
+        })
+
+        // Animations
         this.idle = Animation.fromSpriteSheet(
             idleSheet,
             [0, 1, 2, 3, 4, 5],
             200
         )
-
 
         this.run = Animation.fromSpriteSheet(
             runSheet,
@@ -48,44 +71,82 @@ export class Player extends Actor {
             100
         )
 
-        // position
+        this.jump = Animation.fromSpriteSheet(
+            jumpSheet,
+            [0, 1],
+            100
+        )
+
+        this.fall = Animation.fromSpriteSheet(
+            jumpSheet,
+            [0, 1],
+            100
+        )
+
+        // Start with idle
+        this.graphics.use(this.idle)
+
+        // Position
         this.pos = new Vector(500, 300)
 
-        // size
+        // Scale
         this.scale = new Vector(2, 2)
 
+        // Collision
         this.on('collisionstart', (event) => {
             if (event.other.owner instanceof Enemy) {
                 event.other.owner.kill()
             }
         })
 
+        // Show hitboxes
         engine.showDebug(true)
+        this.body.limitDegreeOfFreedom.push(DegreeOfFreedom.Rotation);
+        this.body.mass = 7;
     }
-
 
     onPreUpdate(engine) {
-        let velX = 0;
 
 
-        if (engine.input.keyboard.isHeld(Keys.Right)) {
-            velX = 200
-            this.graphics.flipHorizontal = false
-            this.graphics.use(this.run)
+        // let velY = 0
+
+
+
+        //Jump
+        if (engine.input.keyboard.wasPressed(Keys.Space)) {
+            this.body.applyLinearImpulse(new Vector(0, -3500));
         }
 
-        if (engine.input.keyboard.isHeld(Keys.Left)) {
-            velX = -200
-            this.graphics.flipHorizontal = true
-            this.graphics.use(this.run)
+        if (this.vel.y < -100) {
+            this.graphics.use(this.jump);
+        } else {
+
+            // Movement
+            if (engine.input.keyboard.isHeld(Keys.Right)) {
+                this.body.applyLinearImpulse(new Vector(150, 0));
+                this.graphics.flipHorizontal = false
+            }
+
+            if (engine.input.keyboard.isHeld(Keys.Left)) {
+                this.body.applyLinearImpulse(new Vector(-150, 0));
+                this.graphics.flipHorizontal = true
+            }
+
+            if (Math.abs(this.vel.x) > 5) {
+                this.graphics.use(this.run);
+            } else {
+                this.graphics.use(this.idle);
+            }
         }
 
-        if (velX === 0) {
-            this.graphics.use(this.idle)
-        }
+        // else if (velX !== 0) {
+        //     this.graphics.use(this.run)
+        // }
+
+        // else {
+        //     this.graphics.use(this.idle)
+        // }
 
 
-        this.vel = new Vector(velX, 0)
     }
-
 }

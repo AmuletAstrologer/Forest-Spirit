@@ -1,9 +1,10 @@
 import '../css/style.css'
-import { Actor, Engine, Vector, DisplayMode } from "excalibur"
+import { Actor, Engine, Vector, DisplayMode, SolverStrategy } from "excalibur"
 import { Resources, ResourceLoader } from './resources.js'
 import { Background } from './background/background.js'    
 import { Player } from './player/player.js'
 import { Enemy } from './enemy/enemy.js'
+import { Ground } from './ground/ground.js'
 
 export class Game extends Engine {
 
@@ -12,7 +13,11 @@ export class Game extends Engine {
             width: 1280,
             height: 720,
             maxFps: 60,
-            displayMode: DisplayMode.FitScreen
+            displayMode: DisplayMode.FitScreen,
+                physics: {
+                    solver: SolverStrategy.Realistic,
+                    gravity: new Vector(0, 800),
+                }
         })
         this.start(ResourceLoader).then(() => this.startGame())
     }
@@ -29,6 +34,8 @@ export class Game extends Engine {
          const enemy = new Enemy()
          this.add(enemy)
 
+         const ground = new Ground()
+         this.add(ground)
     }
 
 
