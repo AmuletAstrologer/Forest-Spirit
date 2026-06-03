@@ -4,6 +4,8 @@ import { Enemy } from "../enemy/enemy.js"
 
 export class Player extends Actor {
 
+     healthbar; 
+
     //Basic State Contoller
     isAttacking = false;
     isHit = false;
