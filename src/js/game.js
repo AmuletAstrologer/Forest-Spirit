@@ -14,6 +14,7 @@ export class Game extends Engine {
             height: 720,
             maxFps: 60,
             displayMode: DisplayMode.FitScreen,
+            suppressPlayButton: true, 
                 physics: {
                     solver: SolverStrategy.Realistic,
                     gravity: new Vector(0, 800),
@@ -24,6 +25,9 @@ export class Game extends Engine {
 
     startGame() {
         console.log("start de game!")
+
+        //Arcade kast inputs
+        // this.input.gamepads
 
          const background = new Background()
          this.add(background)
