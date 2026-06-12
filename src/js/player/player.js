@@ -5,19 +5,21 @@ import { Enemy } from "../enemy/enemy.js"
 export class Player extends Actor {
 
      healthbar; 
+     score;
 
     //Basic State Contoller
     isAttacking = false;
     isHit = false;
     isDead = false;
 
-    constructor() {
+    constructor(score) {
         super({
             width: 67,
             height: 90,
-            collisionType: CollisionType.Active
+            collisionType: CollisionType.Active,
         })
 
+        this.score = score;
         this.isGrounded = false
     }
 
@@ -202,7 +204,8 @@ export class Player extends Actor {
             this.isGrounded = true
 
             if (event.other.owner instanceof Enemy) {
-                event.other.owner.kill()
+                event.other.owner.kill();
+                this.score.addPoint(); 
             }
         })
 

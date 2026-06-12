@@ -1,10 +1,11 @@
 import '../css/style.css'
 import { Actor, Engine, Vector, DisplayMode, SolverStrategy } from "excalibur"
 import { Resources, ResourceLoader } from './resources.js'
-import { Background } from './background/background.js'    
-import { Player } from './player/player.js'
-import { Enemy } from './enemy/enemy.js'
-import { Ground } from './ground/ground.js'
+import { Level } from './level/level.js'
+import { StartScreen } from './startscreen/startscreen.js'
+
+
+
 
 export class Game extends Engine {
 
@@ -23,24 +24,21 @@ export class Game extends Engine {
         this.start(ResourceLoader).then(() => this.startGame())
     }
 
-    startGame() {
-        console.log("start de game!")
+    onInitialize() {
+        const level = new Level();
+        const startScreen = new StartScreen();
 
-        //Arcade kast inputs
-        // this.input.gamepads
+        this.add('startscreen', startScreen);
+        this.add('level', level); 
 
-         const background = new Background()
-         this.add(background)
-
-         const player = new Player()
-         this.add(player)
-
-         const enemy = new Enemy()
-         this.add(enemy)
-
-         const ground = new Ground()
-         this.add(ground)
+        this.goToScene('level');
     }
+ 
+    // startGame() {
+    //     console.log("start de game!")
+
+ 
+    // }
 
 
 }
