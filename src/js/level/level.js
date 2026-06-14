@@ -24,7 +24,7 @@ export class Level extends Scene {
         const engine = ctx.engine;
 
         // IMPORTANT: wipe old actors
-        this.clear();
+        this.actors.forEach(a => a.kill());
 
         this.totalCoins = 0;
         this.totalEnemies = 0;
@@ -53,7 +53,7 @@ export class Level extends Scene {
 
             const coin = new Coin(x, y);
             this.add(coin);
-        } 
+        }
 
         this.totalEnemies = 5;
 

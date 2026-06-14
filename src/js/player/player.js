@@ -257,7 +257,7 @@ export class Player extends Actor {
 
 
         // Show hitboxes
-        engine.showDebug(true)
+        // engine.showDebug(true)
         this.body.limitDegreeOfFreedom.push(DegreeOfFreedom.Rotation);
         this.body.mass = 7;
     }
@@ -274,7 +274,7 @@ export class Player extends Actor {
 
         if (this.pos.y < 0) this.pos.y = 0;
         if (this.pos.y > height) this.pos.y = height;
-        
+
         // Jump
         if (
             engine.input.keyboard.wasPressed(Keys.Space) &&
@@ -290,24 +290,23 @@ export class Player extends Actor {
         // Horizontal movement
         if (engine.input.keyboard.isHeld(Keys.Right)) {
 
-            if (this.vel.x < 200) {
-                this.body.applyLinearImpulse(
-                    new Vector(150, 0)
-                )
-            }
+            this.vel.x = 200;
+            this.graphics.flipHorizontal = false;
 
-            this.graphics.flipHorizontal = false
+
         }
 
         if (engine.input.keyboard.isHeld(Keys.Left)) {
 
-            if (this.vel.x > -200) {
-                this.body.applyLinearImpulse(
-                    new Vector(-150, 0)
-                )
-            }
-
+            this.vel.x = -200;
             this.graphics.flipHorizontal = true
+        }
+
+        if (
+            !engine.input.keyboard.isHeld(Keys.Left) &&
+            !engine.input.keyboard.isHeld(Keys.Right)
+        ) {
+            this.vel.x = 0;
         }
 
 
@@ -409,27 +408,6 @@ export class Player extends Actor {
 
         }
 
-
-        //Death 
-        // if (this.heart <= 0)
-        // {
-        //     engine.goToScene("defeatscreen")
-        // }
-
-
-        //Temprary
-
-        // if (engine.input.keyboard.wasPressed(Keys.H)) {
-        //     this.isHit = true
-        //     this.graphics.use(this.hit)
-        // }
-
-        if (engine.input.keyboard.wasPressed(Keys.G)) {
-            this.isDead = true
-            this.graphics.use(this.death)
-
-        }
-
     }
 
     takeDamage() {
@@ -448,18 +426,14 @@ export class Player extends Actor {
             this.isDead = true;
             this.invincible = true;
 
-            // stop ALL movement immediately
             this.vel = new Vector(0, 0);
             this.actions.clearActions();
 
-            // force death animation ONCE
             this.graphics.use(this.death);
 
-            // prevent any other logic overriding animation
             this.isAttacking = false;
             this.isHit = false;
 
-            // ⏳ delay scene change
             setTimeout(() => {
                 this.scene.engine.goToScene("defeatscreen");
             }, 1200);
