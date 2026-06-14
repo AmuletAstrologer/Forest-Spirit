@@ -3,6 +3,8 @@ import { Actor, Engine, Vector, DisplayMode, SolverStrategy } from "excalibur"
 import { Resources, ResourceLoader } from './resources.js'
 import { Level } from './level/level.js'
 import { StartScreen } from './startscreen/startscreen.js'
+import { CompleteScreen } from './endscreen/completescreen.js'
+import { DefeatScreen } from './endscreen/defeatscreen.js'
 
 
 
@@ -27,18 +29,21 @@ export class Game extends Engine {
     onInitialize() {
         const level = new Level();
         const startScreen = new StartScreen();
+        const completeScreen = new CompleteScreen();
+        const defeatScreen = new DefeatScreen();
 
         this.add('startscreen', startScreen);
         this.add('level', level); 
+        this.add('completescreen', completeScreen);
+        this.add('defeatscreen', defeatScreen);
 
-        this.goToScene('level');
+        this.goToScene('startscreen');
     }
  
-    // startGame() {
-    //     console.log("start de game!")
-
+    startGame() {
+        console.log("start de game!")
  
-    // }
+    }
 
 
 }
